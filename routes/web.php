@@ -5,10 +5,15 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('index');
+    if (Auth::check()) {
+        return redirect()->route('class.index'); 
+    } else {
+        return view('auth.login'); 
+    }
 });
 
 Route::middleware('auth')->group(function (){
@@ -35,7 +40,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('DiemDanh/{id}', [FormController::class, 'index'])->name('form.index');
-Route::post('DiemDanh/{session}', [FormController::class, 'update'])->name('form.update');
+Route::post('DiemDanh/{id}', [FormController::class, 'update'])->name('form.update');
 Route::get('QRCode/{id}', [FormController::class, 'getQrCode'])->name('form.qr');
 
 Route::get('/dashboard', function () {

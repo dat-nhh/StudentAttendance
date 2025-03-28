@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\StudentsImport;
 use App\Models\Attendance;
-use App\Models\ClassSession;
+use App\Models\Lesson;
 use App\Models\MyClass;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -20,11 +20,15 @@ class StudentController extends Controller
     {
         $class = MyClass::where('id', $id)->first();
         $students = Student::where('class', $id)->orderBy('forename', 'asc')->get();
-        $sessions = ClassSession::where('class', $id)->orderBy('date', 'asc')->get();
-        $sessionIds = $sessions->pluck('id');
-        $attendances = Attendance::whereIn('session', $sessionIds)->get();
+        $lessons = Lesson::where('class', $id)->orderBy('date', 'asc')->get();
+        $lessonIds = $lessons->pluck('id');
+        $attendances = Attendance::join('lessons', 'attendances.lesson', '=', 'lessons.id')
+            ->whereIn('attendances.lesson', $lessonIds)
+            ->orderBy('lessons.date', 'asc')
+            ->select('attendances.*')
+            ->get();
 
-        return view('students', ['class' => $class, 'students' => $students, 'sessions' => $sessions, 'attendances' => $attendances]);
+        return view('students', ['class' => $class, 'students' => $students, 'lessons' => $lessons, 'attendances' => $attendances]);
     }
 
     /**

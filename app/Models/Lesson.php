@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ClassSession extends Model
+class Lesson extends Model
 {
     public $incrementing = false;
     protected $fillable = [

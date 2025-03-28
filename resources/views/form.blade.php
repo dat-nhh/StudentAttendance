@@ -15,12 +15,12 @@
     $currentTime = now(); 
     $status = 'vắng';
     
-    $sessionTime = \Carbon\Carbon::parse($time); 
+    $lessonTime = \Carbon\Carbon::parse($time); 
 
-    if ($currentTime->toDateString() == $session->date) {
-        if ($currentTime->lessThanOrEqualTo($sessionTime->copy()->addMinutes(5))) {
+    if ($currentTime->toDateString() == $lesson->date) {
+        if ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes(5))) {
             $status = 'có';
-        } elseif ($currentTime->lessThanOrEqualTo($sessionTime->copy()->addMinutes(60))) {
+        } elseif ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes(60))) {
             $status = 'trễ';
         }
     }
@@ -48,7 +48,7 @@
             <div class="card col-md-4 mx-auto">
                 <h2 class="card-header text-center">Nhập Mã Số Sinh Viên</h2>
                 <div class="card-body">
-                    <form action="{{ route('form.update', $session->id) }}" method="POST">
+                    <form action="{{ route('form.update', \Illuminate\Support\Facades\Crypt::encrypt($lesson->id)) }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <input type="text" class="form-control" name="student" placeholder="Nhập MSSV" required>

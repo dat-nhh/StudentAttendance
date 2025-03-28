@@ -18,9 +18,6 @@
             <div class="container-fluid">
                 <ul class="navbar-nav me-auto mx-5">
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ url('/') }}">Trang chủ</a>
-                    </li>
-                    <li class="nav-item active">
                         <a class="nav-link" href="{{ route('class.index') }}">Danh sách lớp học</a>
                     </li>
                 </ul>
@@ -29,7 +26,8 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <strong>{{ Auth::user()->name }}</strong>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Thông tin người dùng</a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item">Đăng xuất</button>

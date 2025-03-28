@@ -8,8 +8,9 @@ class Attendance extends Model
 {
     public $incrementing = false;
     protected $fillable = [
-        'session',
+        'lesson',
         'student',
         'status',
+        'device',
     ];
 }

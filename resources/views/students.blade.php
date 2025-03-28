@@ -108,12 +108,12 @@
             <div class="table-responsive" style="height: 75vh; overflow-y: auto;">
                 <table class="table table-bordered table-hover table-striped mt-4">
                     <thead>
-                        <tr class="table-success">
-                            <th width='1%' class="sticky-top table-success"><input type="checkbox" id="selectAll"></th>
+                        <tr class="table-primary">
+                            <th width='1%' class="sticky-top"><input type="checkbox" id="selectAll"></th>
                             <th class="sticky-top" style="min-width: 300px; width: 20%;">Họ Tên</th>
                             <th class="sticky-top" width="5%">MSSV</th>
-                            @foreach ($sessions as $session)
-                                <th class="sticky-top" width="5%">{{ \Carbon\Carbon::parse($session->date)->format('d-m') }}</th>
+                            @foreach ($lessons as $lesson)
+                                <th class="sticky-top" width="5%">{{ \Carbon\Carbon::parse($lesson->date)->format('d-m') }}</th>
                             @endforeach
                             <th class="sticky-top"></th>
                         </tr>
@@ -121,7 +121,7 @@
                     <tbody>
                         @foreach($students as $student)
                             <tr>
-                                <td class="table-success">
+                                <td>
                                     <input type="checkbox" class="student-checkbox" value="{{ $student->id }}">
                                 </td>
                                 <td>{{ $student->surname}} {{ $student->forename}}</td>

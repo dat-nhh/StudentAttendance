@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->unsignedBigInteger('session');
+            $table->unsignedBigInteger('lesson');
             $table->string('student');
             $table->enum('status', ['có', 'vắng', 'trễ']);
-            $table->foreign('session')->references('id')->on('class_sessions')->onDelete('cascade');
+            $table->string('device')->nullable();
+            $table->foreign('lesson')->references('id')->on('lessons')->onDelete('cascade');
             $table->foreign('student')->references('id')->on('students')->onDelete('cascade');
-            $table->primary(['session', 'student']);
+            $table->primary(['lesson', 'student']);
             $table->timestamps();
         });
     }

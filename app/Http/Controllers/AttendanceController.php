@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\ClassSession;
+use App\Models\Lesson;
 use App\Models\MyClass;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class AttendanceController extends Controller
     public function index(string $id)
     {
         $class = MyClass::where('id', $id)->first();
-        $attendances = ClassSession::where('class', $id)->orderBy('created_at', 'desc')
+        $attendances = Lesson::where('class', $id)->orderBy('date', 'desc')
             ->paginate(10);
 
         return view('attendances', ['class' => $class, 'attendances' => $attendances]);
@@ -36,16 +36,16 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $session = new ClassSession();
-        $session->class = $request->class;
-        $session->date = $request->date;
-        $session->save();
+        $lesson = new Lesson();
+        $lesson->class = $request->class;
+        $lesson->date = $request->date;
+        $lesson->save();
 
-        $students = Student::where('class',$session->class)->get();
-        $savedSession = ClassSession::where('class', $session->class)->latest()->first();
+        $students = Student::where('class',$lesson->class)->get();
+        $savedLesson = Lesson::where('class', $lesson->class)->latest()->first();
         foreach($students as $student){
             $attendance = new Attendance();
-            $attendance->session = $savedSession->id;
+            $attendance->lesson = $savedLesson->id;
             $attendance->student = $student->id;
             $attendance->status = 'Vắng';
             $attendance->save();
@@ -83,10 +83,10 @@ class AttendanceController extends Controller
      */
     public function destroy(string $id)
     {
-        $form = ClassSession::find($id);
+        $form = Lesson::find($id);
 
         if ($form) {
-            DB::table('class_sessions')->where('id', $id)->delete();
+            DB::table('lessons')->where('id', $id)->delete();
             session()->flash('message', 'Xóa buổi điểm danh thành công');
         } else {
             session()->flash('error', 'Không tìm thấy buổi điểm danh.');

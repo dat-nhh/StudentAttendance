@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\ClassSession;
-use App\Models\Student;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Carbon;
 
 class FormController extends Controller
 {
@@ -17,8 +16,7 @@ class FormController extends Controller
      */
     public function getQrCode(string $id)
     {
-        // $url = route('form.index', $id);
-        $encodedId = base64_encode($id);
+        $encodedId = Crypt::encrypt($id);
         $url = route('form.index', ['id' => $encodedId]);
         $qrCode = QrCode::size(500)->generate($url);
         return view('qrCode', compact('qrCode'));
@@ -26,13 +24,13 @@ class FormController extends Controller
 
     public function index(string $id)
     {
-        $decodedId = base64_decode($id);
+        $decodedId = Crypt::decrypt($id);
 
-        $classSession = ClassSession::find($decodedId);
+        $lesson = Lesson::find($decodedId);
 
-        $time = $classSession->created_at->format('H:i');
+        $time = $lesson->created_at->format('H:i');
 
-        return view('form', ['session' => $classSession, 'time' => $time]);
+        return view('form', ['lesson' => $lesson, 'time' => $time]);
     }
 
     /**
@@ -70,9 +68,17 @@ class FormController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $session)
+    public function update(Request $request, string $id)
     {
-        $attendance = DB::table('attendances')->where('session',$session)->where('student',$request->student)->first();
+        $lesson = Crypt::decrypt($id);
+
+        $attendance = Attendance::where('lesson',$lesson)->where('student',$request->student)->first();
+
+        $device = md5($request->ip() . $request->userAgent());
+
+        if (Attendance::where('device', $device)->where('lesson', $lesson)->exists()) {
+            return redirect()->back()->with('error', 'Bạn đã điểm danh trên thiết bị này.');
+        }
 
         if (!$attendance) {
             return redirect()->back()->with('error', 'Không tìm thấy sinh viên trong lớp');
@@ -83,11 +89,11 @@ class FormController extends Controller
         ]);
 
         DB::table('attendances')
-            ->where('session', $session)
+            ->where('lesson', $lesson)
             ->where('student', $request->student)
-            ->update(['status' => $request->status]);
+            ->update(['status' => $request->status, 'device' => $device]);
 
-        return view('approve');
+        return view('response');
     }
 
     /**
