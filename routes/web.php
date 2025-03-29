@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function (){
     Route::post('classes', [ClassController::class, 'store'])->name('class.store');
     Route::post('classes/update/{class}', [ClassController::class, 'update'])->name('class.update');
     Route::delete('classes/delete/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
-    Route::delete('/student/destroy/selected', [StudentController::class, 'destroySelected'])->name('student.destroy.selected');
+    Route::post('classes/{id}/export', [StudentController::class, 'export'])->name('class.export');
 });
 
 Route::middleware('auth')->group(function () {
@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('students', [StudentController::class, 'store'])->name('student.store');
     // Route::get('students/{student}', [StudentController::class, 'update'])->name('student.update');
     Route::delete('students/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
+    Route::delete('/student/destroy/selected', [StudentController::class, 'destroySelected'])->name('student.destroy.selected');
     Route::post('students/import', [StudentController::class, 'import'])->name('student.import');
 });
 

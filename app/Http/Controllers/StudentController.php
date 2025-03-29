@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsExport;
 use App\Imports\StudentsImport;
 use App\Models\Attendance;
 use App\Models\Lesson;
@@ -63,6 +64,22 @@ class StudentController extends Controller
         Excel::import(new StudentsImport($request->class), $request->file('student_file'));
 
         return redirect()->back()->with('message', 'Thêm sinh viên thành công');
+    }
+
+    public function export(string $id)
+    {
+        $class = MyClass::where('id', $id)->first();
+        $students = Student::where('class', $id)->orderBy('forename', 'asc')->get();
+        $lessons = Lesson::where('class', $id)->orderBy('date', 'asc')->get();
+        $lessonIds = $lessons->pluck('id');
+        $attendances = Attendance::join('lessons', 'attendances.lesson', '=', 'lessons.id')
+            ->whereIn('attendances.lesson', $lessonIds)
+            ->select('attendances.*')
+            ->get();
+
+        $fileName = $class->name . '.xlsx';
+
+        return Excel::download(new StudentsExport($students, $attendances, $lessons), $fileName);
     }
 
     /**

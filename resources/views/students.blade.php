@@ -18,6 +18,13 @@
             </ul>
 
             <div class="ms-auto justify-content-center">
+                <form action="{{ route('class.export', $class->id) }}" method="post" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-info btn-sm">
+                        <i class="fas fa-file-export"></i> Xuất DS
+                    </button>
+                </form>
+
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
                     <i class="bi bi-trash"></i> Xóa
                 </button>
