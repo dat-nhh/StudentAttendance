@@ -11,6 +11,8 @@ class MyClass extends Model
         'name',
         'semester',
         'year',
+        'late_limit',
+        'absent_limit',
         'teacher',
     ];
 }

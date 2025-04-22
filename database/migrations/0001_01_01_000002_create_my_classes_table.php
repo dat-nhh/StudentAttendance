@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->enum('semester', ['1', '2', 'Hè']);
             $table->string('year');
+            $table->integer('late_limit');
+            $table->integer('absent_limit');
             $table->unsignedBigInteger('teacher');
             $table->foreign('teacher')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -15,9 +15,10 @@ return new class extends Migration
             $table->unsignedBigInteger('lesson');
             $table->string('student');
             $table->enum('status', ['có', 'vắng', 'trễ']);
+            $table->dateTime('datetime')->nullable();
             $table->string('device')->nullable();
             $table->foreign('lesson')->references('id')->on('lessons')->onDelete('cascade');
-            $table->foreign('student')->references('id')->on('students')->onDelete('cascade');
+            $table->foreign('student')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->primary(['lesson', 'student']);
             $table->timestamps();
         });

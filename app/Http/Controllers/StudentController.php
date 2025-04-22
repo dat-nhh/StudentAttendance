@@ -14,9 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(string $id)
     {
         $class = MyClass::where('id', $id)->first();
@@ -32,24 +29,26 @@ class StudentController extends Controller
         return view('students', ['class' => $class, 'students' => $students, 'lessons' => $lessons, 'attendances' => $attendances]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $request->validate([
+            'surname' => 'required|string|max:255',
+            'forename' => 'required|string|max:255',
+            'id' => 'required|string|max:255',
+            'email' => 'nullable|email',
+        ]);
+
         $student = new Student();
         $student->id = $request->id;
         $student->surname = $request->surname;
         $student->forename = $request->forename;
-        $student->student= $request->student;
+        $student->email = $request->email;
+        $student->class = $request->class;
         $student->save();
 
         return redirect()->back()->with('message', 'Thêm sinh viên thành công');
@@ -82,33 +81,45 @@ class StudentController extends Controller
         return Excel::download(new StudentsExport($students, $attendances, $lessons), $fileName);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $student = Student::find($id);
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'Sinh viên không tồn tại');
+        }
+
+        $request->validate([
+            'surname' => 'required|string|max:255',
+            'forename' => 'required|string|max:255',
+            'id' => 'required|string|max:255',
+            'email' => 'nullable|email',
+        ]);
+
+        $student->surname = $request->surname;
+        $student->forename = $request->forename;
+        $student->id = $request->id;
+        $student->email = $request->email;
+        $student->save();
+
+        DB::table('attendances')
+            ->where('lesson', $request->lesson)
+            ->where('student', $request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect()->back()->with('message', 'Cập nhật sinh viên thành công');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $student = DB::table('students')->where('id', $id)->first();

@@ -11,6 +11,7 @@ class Attendance extends Model
         'lesson',
         'student',
         'status',
+        'datetime',
         'device',
     ];
 }

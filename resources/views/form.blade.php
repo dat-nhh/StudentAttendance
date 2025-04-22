@@ -18,9 +18,9 @@
     $lessonTime = \Carbon\Carbon::parse($time); 
 
     if ($currentTime->toDateString() == $lesson->date) {
-        if ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes(5))) {
+        if ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes($late))) {
             $status = 'có';
-        } elseif ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes(60))) {
+        } elseif ($currentTime->lessThanOrEqualTo($lessonTime->copy()->addMinutes($absent))) {
             $status = 'trễ';
         }
     }
@@ -53,6 +53,13 @@
                         <div class="form-group">
                             <input type="text" class="form-control" name="student" placeholder="Nhập MSSV" required>
                             <input type="hidden" name="status" value="{{ $status }}">
+                            <input type="hidden" name="datetime" value="{{ now()->format('Y-m-d H:i:s') }}">
+                            <div>
+                                <label>
+                                    <input type="checkbox" name="receive_email" value="1" checked>
+                                    <small>Nhận thông báo điểm danh qua email</small>
+                                </label>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Gửi</button>
                     </form>

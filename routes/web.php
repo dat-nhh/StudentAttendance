@@ -25,10 +25,11 @@ Route::middleware('auth')->group(function (){
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('students{id}', [StudentController::class, 'index'])->name('student.index');
+    Route::get('classes/{id}', [StudentController::class, 'index'])->name('student.index');
     Route::post('students', [StudentController::class, 'store'])->name('student.store');
-    // Route::get('students/{student}', [StudentController::class, 'update'])->name('student.update');
-    Route::delete('students/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
+    // Route::get('classes/{id}/edit', [StudentController::class, 'edit'])->name('student.edit');
+    Route::post('students/update/{id}', [StudentController::class, 'update'])->name('student.update');
+    Route::delete('/students/delete/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
     Route::delete('/student/destroy/selected', [StudentController::class, 'destroySelected'])->name('student.destroy.selected');
     Route::post('students/import', [StudentController::class, 'import'])->name('student.import');
 });
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('attendances{id}', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('attendances', [AttendanceController::class, 'store'])->name('attendance.store');
-    // Route::get('attendances/{attendance}', [AttendanceController::class, 'update'])->name('attendance.update');
+    Route::post('attendances/{attendance}', [AttendanceController::class, 'update'])->name('attendance.update');
     Route::delete('attendances/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 });
 

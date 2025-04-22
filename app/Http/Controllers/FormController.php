@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AttendNotiMail;
 use App\Models\Attendance;
 use App\Models\Lesson;
+use App\Models\MyClass;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FormController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function getQrCode(string $id)
     {
         $encodedId = Crypt::encrypt($id);
@@ -28,46 +29,33 @@ class FormController extends Controller
 
         $lesson = Lesson::find($decodedId);
 
-        $time = $lesson->created_at->format('H:i');
+        $time = $lesson->time;
+        $late = MyClass::where('id',$lesson->class)->first()->late_limit;
+        $absent = MyClass::where('id',$lesson->class)->first()->absent_limit;
 
-        return view('form', ['lesson' => $lesson, 'time' => $time]);
+        return view('form', ['lesson' => $lesson, 'time' => $time, 'late' => $late, 'absent' => $absent]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $lesson = Crypt::decrypt($id);
@@ -91,14 +79,28 @@ class FormController extends Controller
         DB::table('attendances')
             ->where('lesson', $lesson)
             ->where('student', $request->student)
-            ->update(['status' => $request->status, 'device' => $device]);
+            ->update(['status' => $request->status, 'datetime' => $request->datetime,'device' => $device]);
+
+        if ($request->receive_email == 1) {
+            $student = Student::where('id', $request->student)->first();
+            $fullName = $student->surname . ' ' . $student->forename;
+            $lesson_obj = Lesson::where('id', $lesson)->first();
+            $class = MyClass::where('id', $lesson_obj->class)->first();
+
+            Mail::to('hdvp2578@gmail.com')->send(new AttendNotiMail(        //$student->email
+                $fullName,
+                $student->id,
+                $request->status,
+                $request->datetime,
+                $class->name,
+                $lesson_obj->date,
+                $lesson_obj->time
+            ));
+        }
 
         return view('response');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //

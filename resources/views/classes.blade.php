@@ -3,18 +3,18 @@
 @section('content')
 
 @php
-$currentMonth = date('n'); // Lấy tháng hiện tại (1-12)
-$currentYear = date('Y'); // Lấy năm hiện tại
+$currentMonth = date('n'); 
+$currentYear = date('Y');
 $semFlag = 1;
 
 if ($currentMonth >= 2 && $currentMonth < 6) {
-    $yearValue = ($currentYear - 1) . '-' . $currentYear; // 'năm trước-năm nay'
+    $yearValue = ($currentYear - 1) . '-' . $currentYear;
     $semFlag = 2;
 } elseif ($currentMonth >= 6 && $currentMonth < 9) {
-    $yearValue = ($currentYear - 1) . '-' . $currentYear; // 'năm trước-năm nay'
+    $yearValue = ($currentYear - 1) . '-' . $currentYear;
     $semFlag = 3;
 } elseif ($currentMonth >= 9 || $currentMonth < 2) {
-    $yearValue = $currentYear . '-' . ($currentYear + 1); // 'năm nay-năm sau'
+    $yearValue = $currentYear . '-' . ($currentYear + 1);
 }
 @endphp
 <h2>Quản lý lớp học</h2>
@@ -119,6 +119,24 @@ if ($currentMonth >= 2 && $currentMonth < 6) {
                                                 <div class="form-group">
                                                     <label for="year" class="form-label">Năm học</label>
                                                     <input type="text" class="form-control" id="year" name="year" placeholder="Nhập năm học" value="{{ $class->year }}" required>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <label for="late_limit" class="col-sm-6 col-form-label">Ngưỡng đánh trễ</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="number" class="form-control" id="late_limit" name="late_limit" value="{{$class->late_limit}}" required>
+                                                    </div>
+                                                    <div class="col-sm-3 mt-2">
+                                                        <p>Phút</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <label for="absent_limit" class="col-sm-6 col-form-label">Ngưỡng đánh vắng</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="number" class="form-control" id="absent_limit" name="absent_limit" value="{{$class->absent_limit}}" required>
+                                                    </div>
+                                                    <div class="col-sm-3 mt-2">
+                                                        <p>Phút</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

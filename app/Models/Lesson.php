@@ -11,5 +11,6 @@ class Lesson extends Model
         'id',
         'class',
         'date',
+        'time',
     ];
 }

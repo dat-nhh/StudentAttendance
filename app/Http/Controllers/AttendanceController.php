@@ -11,34 +11,28 @@ use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(string $id)
     {
         $class = MyClass::where('id', $id)->first();
-        $attendances = Lesson::where('class', $id)->orderBy('date', 'desc')
+        $attendances = Lesson::where('class', $id)
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('attendances', ['class' => $class, 'attendances' => $attendances]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $lesson = new Lesson();
         $lesson->class = $request->class;
         $lesson->date = $request->date;
+        $lesson->time = $request->time;
         $lesson->save();
 
         $students = Student::where('class',$lesson->class)->get();
@@ -54,33 +48,27 @@ class AttendanceController extends Controller
         return redirect()->back()->with('message', 'Thêm điểm danh thành công');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $class = MyClass::find($id);
+
+        $class->late_limit = $request->late_limit;
+        $class->absent_limit = $request->absent_limit;
+        $class->save();
+
+        return redirect()->back()->with('message', 'Điều chỉnh thành công');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $form = Lesson::find($id);

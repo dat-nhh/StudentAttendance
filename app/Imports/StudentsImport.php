@@ -26,6 +26,7 @@ class StudentsImport implements ToCollection
             $student->surname = $row[0];
             $student->forename = $row[1];
             $student->id = $row[2];
+            $student->email = $row[3];
             $student->class = $this->class;
 
             $student->save();

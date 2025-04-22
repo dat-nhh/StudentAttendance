@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class ClassController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $userId = Auth::id();
@@ -23,49 +20,35 @@ class ClassController extends Controller
         return view('classes', ['classes' => $classes]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $class = new MyClass();
-
         $class->name = $request->name;
         $class->semester = $request->semester;
         $class->year = $request->year;
+        $class->late_limit = 5;
+        $class->absent_limit = 60;
         $class->teacher = $request->teacher;
         $class->save();
 
         return redirect()->route('class.index')->with('message', 'Thêm lớp học thành công');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $class = MyClass::find($id);
@@ -78,19 +61,20 @@ class ClassController extends Controller
             'name' => 'required|string|max:255',
             'semester' => 'required|in:1,2,Hè',
             'year' => 'required|string|max:255',
+            'late_limit' => 'required|integer',
+            'absent_limit' => 'required|integer',
         ]);
 
         $class->name = $request->name;
         $class->semester = $request->semester;
         $class->year = $request->year;
+        $class->late_limit = $request->late_limit;
+        $class->absent_limit = $request->absent_limit;
         $class->save();
 
         return redirect()->back()->with('message', 'Cập nhật lớp học thành công');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $class = MyClass::find($id);
