@@ -104,7 +104,7 @@
                             <div class="form-group row mb-1">
                                 <label for="id" class="col-sm-3 col-form-label">Email</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="Nhập email sinh viên" required>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Nhập email sinh viên">
                                 </div>
                             </div>
                             <input type="hidden" id="class" name="class" value="{{ $class->id }}">
@@ -168,7 +168,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="email" class="col-sm-3 col-form-label">Email</label>
-                                                            <input type="text" class="form-control" id="email" name="email" placeholder="Nhập email sinh viên" value="{{ $student->email }}" required>
+                                                            <input type="text" class="form-control" id="email" name="email" placeholder="Nhập email sinh viên" value="{{ $student->email }}">
                                                         </div>
                                                         @if (\App\Models\Attendance::where('student', $student->id)->exists())
                                                             <div class="form-group row mt-3">

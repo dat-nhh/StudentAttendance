@@ -51,6 +51,15 @@ class StudentController extends Controller
         $student->class = $request->class;
         $student->save();
 
+        $lessons = Lesson::where('class', $student->class)->get();
+        foreach($lessons as $lesson){
+            $attendance = new Attendance();
+            $attendance->lesson = $lesson->id;
+            $attendance->student = $student->id;
+            $attendance->status = 'Vắng';
+            $attendance->save();
+        }
+
         return redirect()->back()->with('message', 'Thêm sinh viên thành công');
     }
 
