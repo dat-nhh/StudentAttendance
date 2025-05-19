@@ -146,7 +146,7 @@
                             <div class="card my-2">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">{{ \Carbon\Carbon::parse($attendance->date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($attendance->created_at)->format('H:i') }}</h5>
+                                        <h5 class="card-title mb-0">{{ \Carbon\Carbon::parse($attendance->date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($attendance->time)->format('H:i') }}</h5>
                                         <div>
                                             <form action="{{ route('form.qr', $attendance->id) }}" method="get" target="_blank" class="d-inline">
                                                 @csrf
@@ -154,6 +154,43 @@
                                                     <i class="bi bi-qr-code"></i> QR Code
                                                 </button>
                                             </form>
+
+                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $attendance->id }}">
+                                                <i class="bi bi-pencil-square"></i> Sửa
+                                            </button>
+
+                                            <div class="modal fade" id="editModal{{ $attendance->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalLabel">Chỉnh sửa thông tin</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{ route('attendance.lesson_update', $attendance->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="date" class="col-sm-3 col-form-label">Ngày</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="date" class="form-control" id="date" name="date" value="{{$attendance->date}}" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="date" class="col-sm-3 col-form-label">Giờ</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input type="time" class="form-control" id="time" name="time"  value="{{ \Carbon\Carbon::parse($attendance->time)->format('H:i') }}" required>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $attendance->id }}">
                                                 <i class="bi bi-trash"></i> Xóa
                                             </button>
@@ -167,7 +204,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Bạn có chắc chắn muốn xóa <strong>{{ \Carbon\Carbon::parse($attendance->date)->format('d-m-Y') }}</strong> không?
+                                                    Bạn có chắc chắn muốn xóa <strong>{{ \Carbon\Carbon::parse($attendance->date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($attendance->time)->format('H:i') }}</strong> không?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>

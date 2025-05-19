@@ -35,8 +35,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('attendances{id}', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('attendances/{id}', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('attendances', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::post('attendances/lesson{attendance}', [AttendanceController::class, 'lesson_update'])->name('attendance.lesson_update');
     Route::post('attendances/{attendance}', [AttendanceController::class, 'update'])->name('attendance.update');
     Route::delete('attendances/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
 });

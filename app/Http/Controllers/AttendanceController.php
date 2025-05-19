@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Lesson;
 use App\Models\MyClass;
 use App\Models\Student;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -67,6 +68,17 @@ class AttendanceController extends Controller
         $class->save();
 
         return redirect()->back()->with('message', 'Điều chỉnh thành công');
+    }
+
+    public function lesson_update(Request $request, string $id)
+    {
+        $lesson = Lesson::find($id);
+
+        $lesson->date = $request->date;
+        $lesson->time = Carbon::parse($request->time)->format('H:i');
+        $lesson->save();
+
+        return redirect()->back()->with('message', 'Chỉnh sửa buổi điểm danh thành công');
     }
 
     public function destroy(string $id)
